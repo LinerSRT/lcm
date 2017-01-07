@@ -536,9 +536,9 @@ void* lcm_switch_mode1(int mode)
 #endif
 }
 
-LCM_DRIVER rm68191_tm45_linglong_qhd_lcm_drv =
+LCM_DRIVER rm68191_linglong_T47079M_TIANMA_dsi_2_qhd_lcm_drv =
 {
-	.name			= "rm68191_tm45_linglong_qhd",
+	.name			= "rm68191_linglong_T47079M_TIANMA_dsi_2_qhd",
 	.set_util_funcs = lcm_set_util_funcs,
 	.get_params     = lcm_get_params,
 	.init           = lcm_init,
