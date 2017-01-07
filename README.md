@@ -1,1 +1,2 @@
 # lcm
+rm68191_linglong_T47079M_TIANMA_dsi_2_qhd
