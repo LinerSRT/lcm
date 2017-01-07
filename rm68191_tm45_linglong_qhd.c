@@ -272,10 +272,10 @@ static struct LCM_setting_table lcm_sleep_out_setting[] = {
 static struct LCM_setting_table lcm_sleep_in_setting[] = {
 	// Display off sequence
 	{0x28, 1, {0x00}},
+	{REGFLAG_DELAY, 50, {}},
 
 	// Sleep Mode On
 	{0x10, 1, {0x00}},
-	{REGFLAG_DELAY, 50, {}},
 
 	{REGFLAG_END_OF_TABLE, 0x00, {}}
 };
@@ -370,15 +370,16 @@ static void lcm_get_params(LCM_PARAMS *params)
 
 static void lcm_init(void)
 {
-    //lcd_power_en(0);
-    //lcd_power_en(1);
-
+  hwPowerOn(6, 2800, "Lance_LCM");
+  hwPowerOn(7, 1800, "Lance_LCM");
+  
+	MDELAY(100);
     SET_RESET_PIN(1);
-	MDELAY(5);
+	MDELAY(20);
     SET_RESET_PIN(0);
     MDELAY(20);
     SET_RESET_PIN(1);
-    MDELAY(100);
+    MDELAY(150);
 
 #if defined(BUILD_LK)
     printf("lk lcm_init\n");
@@ -419,44 +420,18 @@ static void lcm_resume(void)
 
 static unsigned int lcm_compare_id(void)
 {
-	unsigned int id;
-	unsigned char buffer[5];
-	unsigned int array[5];
-
-
-    //lcd_power_en(1);
-
-	SET_RESET_PIN(1);
-	MDELAY(10);
-	SET_RESET_PIN(0);
-	MDELAY(10);
-	SET_RESET_PIN(1);
+	hwPowerOn(6, 2800, "Lance_LCM");
+  hwPowerOn(7, 1800, "Lance_LCM");
+  
 	MDELAY(100);
-/*
-	push_table(lcm_compare_id_setting,
-			sizeof(lcm_compare_id_setting) /
-			sizeof(struct LCM_setting_table), 1);
-*/
-	array[0] = 0x00063902;// read id return two byte,version and id
-	array[1] = 0x52AA55F0;
-	array[2] = 0x00000108;
-	dsi_set_cmdq(array, 3, 1);
-	MDELAY(10);
-	
-	array[0] = 0x00023700;// read id return two byte,version and id
-	dsi_set_cmdq(array, 1, 1);
-
-	read_reg_v2(0xc5, buffer, 2);
-	id = ((buffer[0] << 8) | buffer[1]);
-#if defined(BUILD_LK)
-printf("%s, [rm68191_ctc50_jhzt]  buffer[0] = [0x%x] buffer[2] = [0x%x] ID = [0x%x]\n",__func__, buffer[0], buffer[1], id);
-#else
-printk("%s, [rm68191_ctc50_jhzt]  buffer[0] = [0x%x] buffer[2] = [0x%x] ID = [0x%x]\n",__func__, buffer[0], buffer[1], id);
-#endif
-
-    //lcd_power_en(0);
+    SET_RESET_PIN(1);
+	MDELAY(20);
+    SET_RESET_PIN(0);
+    MDELAY(20);
+    SET_RESET_PIN(1);
+    MDELAY(150);
     
-    return (RM68191_LCM_ID == id)?1:0;
+    return 1;
 }
 
 static unsigned int lcm_esd_check(void)
